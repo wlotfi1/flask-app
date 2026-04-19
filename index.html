@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" id="home-hero">
+    <div class="hero-content">
+        <h1>Welcome to <span class="hero-brand">{{ site_config.site_name }}</span></h1>
+        <p>Buy Robux, Items & Accounts safely and securely.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('robux') }}" class="btn btn-primary" id="hero-btn-robux">Buy Robux</a>
+            <a href="{{ url_for('items') }}" class="btn btn-secondary" id="hero-btn-items">Browse Items</a>
+        </div>
+    </div>
+</section>
+
+<section class="categories-section" id="categories-section">
+    <h2 class="section-title">Shop by Category</h2>
+    <div class="category-cards">
+        <a href="{{ url_for('items') }}" class="category-card" id="cat-card-items">
+            <div class="cat-icon">&#127918;</div>
+            <h3>In-Game Items</h3>
+            <p>Rare & exclusive items</p>
+        </a>
+        <a href="{{ url_for('robux') }}" class="category-card" id="cat-card-robux">
+            <div class="cat-icon">&#128176;</div>
+            <h3>Cheap Robux</h3>
+            <p>Instant delivery packages</p>
+        </a>
+        <a href="{{ url_for('accounts') }}" class="category-card" id="cat-card-accounts">
+            <div class="cat-icon">&#128100;</div>
+            <h3>Stacked Accounts</h3>
+            <p>Aged & loaded accounts</p>
+        </a>
+    </div>
+</section>
+
+<section class="featured-section" id="featured-section">
+    <h2 class="section-title">Fresh on the Market</h2>
+    {% if featured %}
+    <div class="grid">
+        {% for item in featured %}
+        <a href="{{ url_for('listing_detail', listing_id=item.id) }}" class="listing-card">
+            <div class="card-img-wrap">
+                <img src="{{ item.image_url }}" alt="{{ item.title }}" loading="lazy">
+                {% if item.is_new %}
+                <span class="badge badge-new">NEW</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <span class="category-label cat-{{ item.category }}">{{ item.category | title }}</span>
+                <h3 class="card-title">{{ item.title }}</h3>
+                <div class="card-price">${{ "%.2f"|format(item.price) }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No listings available right now. Check back later!</p>
+    {% endif %}
+</section>
+{% endblock %}

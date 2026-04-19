@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category }} | {{ site_config.site_name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">{{ category }}</h1>
+    {% if q %}
+    <p class="search-results-info">Showing results for "{{ q }}"</p>
+    {% endif %}
+</div>
+
+{% if listings %}
+<div class="grid" id="category-grid">
+    {% for item in listings %}
+    <a href="{{ url_for('listing_detail', listing_id=item.id) }}" class="listing-card">
+        <div class="card-img-wrap">
+            <img src="{{ item.image_url }}" alt="{{ item.title }}" loading="lazy">
+            {% if item.is_new %}
+            <span class="badge badge-new">NEW</span>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <span class="category-label cat-{{ item.category }}">{{ item.category | title }}</span>
+            <h3 class="card-title">{{ item.title }}</h3>
+            <div class="card-price">${{ "%.2f"|format(item.price) }}</div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <h2>No listings found</h2>
+    <p>Check back later or try a different search!</p>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Go Home</a>
+</div>
+{% endif %}
+{% endblock %}

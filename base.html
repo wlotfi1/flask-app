@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_config.site_name }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_desc %}Buy Robux, Items & Accounts safely at {{ site_config.site_name }}.{% endblock %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% if site_config.favicon_url %}
+    <link rel="icon" type="image/x-icon" href="{{ site_config.favicon_url }}">
+    {% endif %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="main-nav">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="nav-logo" id="nav-logo">
+                <span class="logo-icon">&#9654;</span> {{ site_config.site_name }}
+            </a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="{{ url_for('items') }}" id="nav-items">&#127918; Items</a></li>
+                <li><a href="{{ url_for('robux') }}" id="nav-robux">&#128176; Robux</a></li>
+                <li><a href="{{ url_for('accounts') }}" id="nav-accounts">&#128100; Accounts</a></li>
+            </ul>
+            <form class="nav-search" action="{{ url_for('search') }}" method="GET" id="nav-search">
+                <input type="text" name="q" placeholder="Search listings..." value="{{ request.args.get('q', '') }}" id="search-input">
+                <button type="submit" id="search-btn">&#128269;</button>
+            </form>
+            <a href="{{ url_for('items') }}" class="nav-cta" id="nav-browse">Browse</a>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+        {% for cat, msg in messages %}
+        <div class="flash flash-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="logo-icon">&#9654;</span> {{ site_config.site_name }}
+            </div>
+            <div class="footer-links">
+                <a href="{{ url_for('items') }}">Items</a>
+                <a href="{{ url_for('robux') }}">Robux</a>
+                <a href="{{ url_for('accounts') }}">Accounts</a>
+                <a href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noopener" id="footer-discord">Discord</a>
+            </div>
+            <p class="footer-disclaimer">Not affiliated with Roblox Corporation. All trademarks belong to their respective owners.</p>
+            <p class="footer-copy">&copy; {{ now.year }} {{ site_config.site_name }}</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile nav toggle
+        const toggle = document.getElementById('nav-toggle');
+        const links = document.getElementById('nav-links');
+        toggle.addEventListener('click', () => {
+            links.classList.toggle('open');
+            toggle.classList.toggle('active');
+        });
+        // Auto-hide flash
+        document.querySelectorAll('.flash').forEach(el => {
+            setTimeout(() => el.style.opacity = '0', 3500);
+            setTimeout(() => el.remove(), 4000);
+        });
+    </script>
+</body>
+</html>
